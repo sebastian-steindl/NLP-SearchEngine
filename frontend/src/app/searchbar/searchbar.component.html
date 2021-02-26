@@ -1,0 +1,348 @@
+<div>
+    <form #form class="flex-box" (ngSubmit)="onSubmit()">
+        <div>
+            <mat-form-field class="input-full wider">
+                <mat-label>Im Satz</mat-label>
+                <input #full matInput type="text" [(ngModel)]="volltext" [matAutocomplete]="autoFull"
+                    (change)="inputChanged($event)" (keydown.space)="keydownSpace($event)" name="volltext">
+                <mat-autocomplete #autoFull="matAutocomplete" #autoVolltext>
+                    <mat-option *ngFor="let option of volltextOptions" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
+                <button mat-button *ngIf="volltext" matSuffix mat-icon-button aria-label="Clear" (click)="volltext=''">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field class="input-full wider">
+                <mat-label>Subjekt</mat-label>
+                <input #subj matInput type="text" [(ngModel)]="valueSubj" name="subj" [matAutocomplete]="autoSubj">
+                <!-- <div *ngFor="let option of subjektOptions">{{option}}</div> -->
+                <mat-autocomplete #autoSubj="matAutocomplete">
+                    <mat-option *ngFor="let option of subjektOptions" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
+                <button mat-button *ngIf="valueSubj" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="valueSubj=''">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <mat-label>Verknüpfung</mat-label>
+                <select #comb1 matNativeControl>
+                    <option value="AND">AND</option>
+                    <option value="OR">OR</option>
+                </select>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field class="input-full wider">
+                <mat-label>Akkusativobj</mat-label>
+                <input #akk matInput type="text" [(ngModel)]="valueAkk" name="akku" [matAutocomplete]="autoAkk">
+                <mat-autocomplete #autoAkk="matAutocomplete">
+                    <mat-option *ngFor="let option of akkOptions" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
+                <button mat-button *ngIf="valueAkk" matSuffix mat-icon-button aria-label="Clear" (click)="valueAkk=''">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <mat-label>Verknüpfung</mat-label>
+                <select #comb2 matNativeControl>
+                    <option value="AND">AND</option>
+                    <option value="OR">OR</option>
+                </select>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field class="input-full wider">
+                <mat-label>Dativobjekt</mat-label>
+                <input #dat matInput type="text" [(ngModel)]="valueDat" name="dativ" [matAutocomplete]="autoDat">
+                <mat-autocomplete #autoDat="matAutocomplete">
+                    <mat-option *ngFor="let option of datOptions" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
+                <button mat-button *ngIf="valueDat" matSuffix mat-icon-button aria-label="Clear" (click)="valueDat=''">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <mat-label>Verknüpfung</mat-label>
+                <select #comb3 matNativeControl>
+                    <option value="AND">AND</option>
+                    <option value="OR">OR</option>
+                </select>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field class="input-full wider">
+                <mat-label>Root</mat-label>
+                <input #root matInput type="text" [(ngModel)]="valueRoot" name="root" [matAutocomplete]="autoRoot">
+                <mat-autocomplete #autoRoot="matAutocomplete">
+                    <mat-option *ngFor="let option of rootOptions" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
+                <button mat-button *ngIf="valueRoot" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="valueRoot=''">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <mat-label>Verknüpfung</mat-label>
+                <select #comb4 matNativeControl>
+                    <option value="AND">AND</option>
+                    <option value="OR">OR</option>
+                </select>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field class="input-full wider">
+                <mat-label>Rest</mat-label>
+                <input #rest matInput type="text" [(ngModel)]="valueRest" name="rest" [matAutocomplete]="autoRest">
+                <mat-autocomplete #autoRest="matAutocomplete">
+                    <mat-option *ngFor="let option of restOptions" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
+                <button mat-button *ngIf="valueRest" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="valueRest=''">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <button type="submit" value="GO" class="go-button" mat-raised-button>GO</button>
+        </div>
+
+        <div>
+            <button (click)="parseInputAndFillUpFields($event)" class="go-button" mat-raised-button>Felder
+                vorschlagen</button>
+        </div>
+    </form>
+</div>
+<ngb-accordion #acc="ngbAccordion">
+    <!--activeIds="ngb-panel-0"-->
+    <ngb-panel title="Erweiterte Optionen" class="flex-box">
+        <ng-template ngbPanelContent>
+            <div>
+                <mat-form-field class="input-full">
+                    <mat-label>Court Id</mat-label>
+                    <input matInput type="text" [(ngModel)]="valueCourtId" name="courtId">
+                    <button mat-button *ngIf="valueCourtId" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="valueCourtId=''">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field class="input-full">
+                    <mat-label>Court Slug</mat-label>
+                    <input matInput type="text" [(ngModel)]="valueCourtSlug" name="courtSlug">
+                    <button mat-button *ngIf="valueCourtSlug" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="valueCourtSlug=''">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field class="input-full">
+                    <mat-label>File Number</mat-label>
+                    <input matInput type="text" [(ngModel)]="valueFileNumber" name="courtSlug">
+                    <button mat-button *ngIf="valueFileNumber" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="valueFileNumber=''">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+            <div>
+                <label id="example-radio-group-label">Typ</label>
+                <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+                    [(ngModel)]="valueType">
+                    <mat-radio-button class="example-radio-button" *ngFor="let type of types" [value]="type">
+                        {{type}}
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+            <div>
+                <mat-form-field class="input-full">
+                    <mat-label>Geldbetrag Min</mat-label>
+                    <input matInput type="text" [(ngModel)]="valueMoneyMin" name="courtSlug">
+                    <button mat-button *ngIf="valueMoneyMin" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="valueMoneyMin=''">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field class="input-full">
+                    <mat-label>Geldbetrag Max</mat-label>
+                    <input matInput type="text" [(ngModel)]="valueMoneyMax" name="courtSlug">
+                    <button mat-button *ngIf="valueMoneyMax" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="valueMoneyMax=''">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field class="input-full">
+                    <mat-label>Satz-Sentiment Min</mat-label>
+                    <input matInput type="text" [(ngModel)]="valueSentimentSentenceMin" name="courtSlug">
+                    <button mat-button *ngIf="valueSentimentSentenceMin" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="valueSentimentSentenceMin=''">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field class="input-full">
+                    <mat-label>Satz-Sentiment Max</mat-label>
+                    <input matInput type="text" [(ngModel)]="valueSentimentSentenceMax" name="courtSlug">
+                    <button mat-button *ngIf="valueSentimentSentenceMax" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="valueSentimentSentenceMax=''">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+        </ng-template>
+    </ngb-panel>
+</ngb-accordion>
+<mat-divider></mat-divider>
+<div>
+    <p>Beliebigen Satz untersuchen:</p>
+    <div>
+        <mat-form-field class="input-full">
+            <mat-label>Satz</mat-label>
+            <input #full matInput type="text" [(ngModel)]="valueSatzUntersuchen" name="satzUntersuchen">
+            <button mat-button *ngIf="valueSatzUntersuchen" matSuffix mat-icon-button aria-label="Clear"
+                (click)="valueSatzUntersuchen=''">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+        <div>
+            <button (click)="renderSingleSentence($event)" class="go-button" mat-raised-button>Render</button>
+        </div>
+        <div>
+            <button (click)="parseSingleSentence($event)" class="go-button" mat-raised-button>Parse, prepare Query
+            </button>
+        </div>
+        <div #satzUntersuchenRender class="svg-container">
+            <div *ngIf="satzUntersuchenSvgResult" [innerHTML]="satzUntersuchenSvgResult"></div>
+        </div>
+        <div #satzUntersuchenParse class="parse-container">
+            <div *ngIf="(satzUntersuchenParseResult.Rest || satzUntersuchenParseResult.ROOT)">
+                <b>Subjekt:</b> {{satzUntersuchenParseResult.Subjekt}} <br>
+                <b>Akkusativobjekt:</b> {{satzUntersuchenParseResult.AkkusativObjekt}} <br>
+                <b>Dativobjekt:</b> {{satzUntersuchenParseResult.DativObjekt}} <br>
+                <b>Root:</b> {{satzUntersuchenParseResult.ROOT}} <br>
+                <b>Rest:</b> {{satzUntersuchenParseResult.Rest}} <br>
+            </div>
+        </div>
+    </div>
+</div>
+<mat-divider></mat-divider>
+<div *ngIf="totalResultCount">Total result count: {{totalResultCount}}
+    <mat-divider></mat-divider>
+</div>
+<div class="result-table">
+    <div *ngFor="let item of results">
+        <div>
+            Fall-Ident: {{item.slug}}
+            <div *ngIf="item.type">
+                Typ: {{item.type}}
+            </div>
+            <div>
+                Antragserfolg? (Sentiment des gesamten Cases): {{item.sentiment}} <div *ngIf="item.sentiment == 0">
+                    ¯\_(ツ)_/¯ </div>
+            </div>
+            <br>
+            Satz-Sentiment: {{item.sentence_sentiment}} <div *ngIf="item.sentence_sentiment == 0">¯\_(ツ)_/¯</div>
+        </div>
+        <ngb-accordion #acc="ngbAccordion">
+            <!--activeIds="ngb-panel-0"-->
+            <ngb-panel title="Parsing-Ergebnis">
+                <ng-template ngbPanelContent>
+                    Subjekt: {{item.subjekt}} <br>
+                    Akkusativobjekt: {{item.akkusativobjekt}} <br>
+                    Dativobjekt: {{item.dativobjekt}} <br>
+                    Root: {{item.root}} <br>
+                    Rest: {{item.rest}} <br>
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel title="Metadaten">
+                <ng-template ngbPanelContent>
+                    Case-Id: {{item.case_id}}<br>
+                    Court-Name: {{item.court_name}}<br>
+                    Court-Slug: {{item.court_slug}}<br>
+                    Court-State: {{item.court_state}}<br>
+                    Court-Id: {{item.court_id}}<br>
+                    Court-city: {{item.court_city}}<br>
+                    Court-jurisdiction: {{item.court_city}}<br>
+                    Court-level-of-appeal: {{item.court_level_of_appeal}}<br>
+                    Court-city: {{item.court_city}}<br>
+                    File-Number: {{item.file_Number}}<br>
+                    Satz-Number: {{item.sentence_number}}<br>
+                    Vorkommende Geldbeträge in €: {{item.geldbetrag}}<br>
+                    Ecli: {{item.ecli}}<br>
+                    Created-Date: {{item.created_date}}<br>
+                    Updated-Date: {{item.updated_date}}<br>
+                    Datum: {{item.date}}<br>
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel>
+                <ng-template ngbPanelTitle>
+                    <span>Ganzer Satz / Volltext</span>
+                </ng-template>
+                <ng-template ngbPanelContent>
+                    <div>
+                        {{item.fullSentence}}
+                    </div>
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel id="svg-{{item.case_id}}">
+                <ng-template ngbPanelTitle>
+                    <span>Displacy.render() Graph</span>
+                </ng-template>
+                <ng-template ngbPanelContent>
+                    <button (click)="renderGraph($event, item)" mat-raised-button>Render Graph</button>
+                    <button (click)="downloadGraph($event, item)" class="download-btn" mat-raised-button>Download
+                        Graph</button>
+                    <div class="svg-container">
+                    </div>
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel>
+                <ng-template ngbPanelTitle>
+                    <span>Ganzer Volltext</span>
+                </ng-template>
+                <ng-template ngbPanelContent>
+                    <div>
+                        <div *ngIf="item.fullCaseText.length" style="white-space: pre-wrap;">{{item.fullCaseText}}</div>
+                        <button (click)="lazyLoadFullCaseText($event, item)" mat-raised-button>Text laden</button>
+                    </div>
+                </ng-template>
+            </ngb-panel>
+        </ngb-accordion>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <ngb-pagination (pageChange)="onPageChange($event)" [collectionSize]="totalResultCount" [pageSize]="itemsPerPage"
+        [(page)]="currentPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true">
+    </ngb-pagination>
+</div>
